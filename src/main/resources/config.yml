@@ -1,0 +1,292 @@
+# ===========================================
+# CoinOp Economy Plugin Configuration
+# Version: 1.0.0
+# ===========================================
+
+# ===========================================
+# Economy Settings
+# ===========================================
+economy:
+  # Tax rate for trades (0.0 to 1.0)
+  # This is a percentage taken from each transaction
+  # Example: 0.05 = 5% tax
+  tax-rate: 0.0
+
+# ===========================================
+# Order Settings
+# ===========================================
+orders:
+  # Minimum amount per order
+  min-amount: 1
+  
+  # Maximum amount per order
+  # Set to -1 for unlimited
+  max-amount: 2304  # 36 stacks (one double chest)
+  
+  # Order expiration time in minutes
+  # Set to -1 for no expiration
+  expiration-minutes: -1
+
+# ===========================================
+# Commodities Configuration
+# ===========================================
+commodities:
+  # List of allowed commodities
+  # Leave empty to allow all items
+  # Example: [DIAMOND, IRON_INGOT, GOLD_INGOT, COBBLESTONE]
+  allowed: []
+  
+  # Categories for organizing commodities
+  categories:
+    ores:
+      - DIAMOND
+      - IRON_INGOT
+      - GOLD_INGOT
+      - COPPER_INGOT
+      - COAL
+      - REDSTONE
+      - LAPIS_LAZULI
+      - EMERALD
+      - QUARTZ
+      - NETHERITE_INGOT
+    crops:
+      - WHEAT
+      - CARROT
+      - POTATO
+      - BEETROOT
+      - MELON
+      - PUMPKIN
+      - SUGAR_CANE
+      - CACTUS
+      - BAMBOO
+      - KELP
+    mob-drops:
+      - BONE
+      - GUNPOWDER
+      - SPIDER_EYE
+      - ENDER_PEARL
+      - BLAZE_ROD
+      - GHAST_TEAR
+      - SLIME_BALL
+      - PHANTOM_MEMBRANE
+    building:
+      - COBBLESTONE
+      - STONE
+      - DIRT
+      - SAND
+      - GRAVEL
+      - OAK_LOG
+      - SPRUCE_LOG
+      - BIRCH_LOG
+      - JUNGLE_LOG
+      - ACACIA_LOG
+      - DARK_OAK_LOG
+
+# ===========================================
+# Trade Limits
+# ===========================================
+limits:
+  # Global daily trade limit per player
+  # Set to 0 for no limit
+  global-daily-limit: 0
+  
+  # Per-commodity daily limits
+  # Format: COMMODITY_ID: limit
+  daily-limits:
+    # Example: Limit diamonds to 1000 per day per player
+    # DIAMOND: 1000
+    # NETHERITE_INGOT: 100
+
+# ===========================================
+# Price Bounds
+# ===========================================
+# Prevents extreme market manipulation
+price-bounds:
+  enabled: true
+  
+  # Global bounds (applies to all commodities)
+  global-min: 0.01
+  global-max: 1000000000  # 1 billion
+  
+  # Per-commodity bounds
+  # Format: COMMODITY_ID: {min: X, max: Y}
+  commodities:
+    DIAMOND:
+      min: 10.0
+      max: 10000.0
+    NETHERITE_INGOT:
+      min: 100.0
+      max: 100000.0
+    IRON_INGOT:
+      min: 0.5
+      max: 100.0
+    GOLD_INGOT:
+      min: 1.0
+      max: 500.0
+    COBBLESTONE:
+      min: 0.01
+      max: 10.0
+
+# ===========================================
+# Multi-Server Synchronization
+# ===========================================
+sync:
+  # Enable multi-server sync via Redis
+  enabled: false
+  
+  redis:
+    # Redis server host
+    host: localhost
+    
+    # Redis server port
+    port: 6379
+    
+    # Redis password (leave empty if no password)
+    password: ""
+    
+    # Redis database index
+    database: 0
+
+# ===========================================
+# Database Configuration
+# ===========================================
+database:
+  # Database type: sqlite or mysql
+  type: sqlite
+  
+  # MySQL settings (only used if type is mysql)
+  host: localhost
+  port: 3306
+  name: coinop
+  user: root
+  password: ""
+  
+  # Connection pool settings
+  pool:
+    max-connections: 10
+    min-idle: 2
+    connection-timeout: 30000
+
+# ===========================================
+# GUI Settings
+# ===========================================
+gui:
+  # Enable GUI-based interface for CoinOp
+  # If disabled, players use chat commands only
+  enabled: true
+
+  # Open GUI when player runs /coinop without arguments
+  open-on-command: true
+
+  # GUI title
+  title: "&6CoinOp &8- &7Market"
+
+  # Main menu size (must be multiple of 9, max 54)
+  main-menu-size: 54
+
+  # Items per page in category views
+  items-per-page: 45
+
+  # Update interval for refreshing prices in GUI (ticks)
+  update-interval: 20
+
+  # Sound effects
+  sounds:
+    open: "BLOCK_CHEST_OPEN"
+    click: "UI_BUTTON_CLICK"
+    purchase: "ENTITY_EXPERIENCE_ORB_PICKUP"
+    error: "ENTITY_VILLAGER_NO"
+
+  # Category icons (material names)
+  icons:
+    ores: "DIAMOND"
+    crops: "WHEAT"
+    mob-drops: "BLAZE_ROD"
+    building: "COBBLESTONE"
+    search: "COMPASS"
+    orders: "WRITABLE_BOOK"
+    history: "BOOK"
+
+# ===========================================
+# Lore Display Settings
+# ===========================================
+lore:
+  # Enable lore-based price discovery
+  # Shows market data in item tooltips
+  enabled: true
+  
+  # Update interval in ticks (20 ticks = 1 second)
+  update-interval: 20
+  
+  # Show price history in lore
+  show-history: true
+  
+  # Number of history points to show
+  history-points: 5
+
+# ===========================================
+# Anvil Rework Settings
+# ===========================================
+anvil-rework:
+  # Enable the anvil rework system
+  # Replaces exponential cost with linear cost
+  enabled: true
+  
+  # Enable enchantment extraction
+  # Allows moving enchants to books without massive penalties
+  enchantment-extraction: true
+  
+  # Maximum anvil cost (0 = unlimited)
+  # Set to 40 to keep vanilla behavior
+  max-cost: 0
+  
+  # Base costs for materials
+  material-costs:
+    NETHERITE_INGOT: 15
+    DIAMOND: 10
+    EMERALD: 8
+    GOLD_INGOT: 5
+    IRON_INGOT: 3
+    COPPER_INGOT: 2
+    STONE: 1
+
+# ===========================================
+# Messages Configuration
+# ===========================================
+messages:
+  prefix: "&6[CoinOp] &r"
+  
+  # Transaction messages
+  order-placed: "&aOrder placed successfully!"
+  order-cancelled: "&cOrder cancelled."
+  order-filled: "&aOrder filled! You received &e{amount}x {commodity}&a."
+  order-partial: "&eOrder partially filled. &a{filled}&e/{total} units."
+  
+  # Error messages
+  insufficient-funds: "&cInsufficient funds! You need &e{amount}&c."
+  insufficient-items: "&cYou don't have enough items to sell."
+  price-out-of-bounds: "&cPrice must be between &e{min}&c and &e{max}&c."
+  daily-limit-reached: "&cYou have reached the daily trade limit for {commodity}."
+  no-orders-available: "&cNo orders available for {commodity}."
+  
+  # Info messages
+  price-info: "&e{commodity} &7| Buy: &a{buy_price} &7| Sell: &c{sell_price}"
+  volume-info: "&724h Volume: &e{volume} &7| VWAP: &e{vwap}"
+  
+  # Admin messages
+  config-reloaded: "&aConfiguration reloaded."
+  bounds-set: "&aPrice bounds set for &e{commodity}&a: {min} - {max}"
+  limit-set: "&aDaily limit set for &e{commodity}&a: {limit}"
+
+# ===========================================
+# Debug Settings
+# ===========================================
+debug:
+  # Enable debug logging
+  enabled: false
+  
+  # Log all trades
+  log-trades: false
+  
+  # Log order book changes
+  log-order-book: false

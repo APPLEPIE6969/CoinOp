@@ -1,0 +1,89 @@
+plugins {
+    id 'java'
+    id 'io.github.goooler.shadow' version '8.1.8' apply false
+}
+
+group = 'com.coinop'
+version = '1.0.0-SNAPSHOT'
+
+// Root project doesn't compile anything - source is in version-specific subprojects
+tasks.compileJava { enabled = false }
+tasks.processResources { enabled = false }
+tasks.jar { enabled = false }
+tasks.compileTestJava { enabled = false }
+tasks.test { enabled = false }
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'io.github.goooler.shadow'
+
+    group = rootProject.group
+    version = rootProject.version
+
+    repositories {
+        maven { url = 'https://repo.papermc.io/repository/maven-public/' }
+        maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+        maven { url = 'https://jitpack.io' }
+        maven { url = 'https://s01.oss.sonatype.org/content/repositories/releases/' }
+        mavenCentral()
+    }
+
+    dependencies {
+        compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
+        implementation 'redis.clients:jedis:5.1.0'
+        implementation 'com.zaxxer:HikariCP:5.1.0'
+        implementation 'com.mysql:mysql-connector-j:8.3.0'
+        implementation 'org.xerial:sqlite-jdbc:3.45.1.0'
+        implementation 'com.google.code.gson:gson:2.10.1'
+
+        // Test dependencies
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.1'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.1'
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    processResources {
+        expand project.properties
+        filteringCharset = 'UTF-8'
+    }
+
+    tasks.build {
+        dependsOn(tasks.shadowJar)
+    }
+
+    shadowJar {
+        relocate 'redis.clients', 'com.coinop.lib.jedis'
+        relocate 'com.zaxxer.hikari', 'com.coinop.lib.hikari'
+        archiveClassifier.set('')
+        minimize()
+    }
+
+    tasks.jar {
+        enabled = false
+    }
+}
+
+task buildAll {
+    group = 'build'
+    description = 'Builds the plugin for all supported Minecraft versions'
+
+    dependsOn subprojects.collect { it.tasks.named('build') }
+
+    doLast {
+        println ""
+        println "========================================"
+        println "All versions built successfully!"
+        println "========================================"
+        println ""
+        println "Output JARs:"
+        subprojects.each { sub ->
+            def jarFile = file("${sub.buildDir}/libs/${sub.name}-${version}.jar")
+            if (jarFile.exists()) {
+                println " - ${sub.name}: ${jarFile}"
+            }
+        }
+    }
+}

@@ -1,0 +1,99 @@
+name: CoinOp
+version: 1.0.0-SNAPSHOT
+main: com.coinop.CoinOpPlugin
+api-version: '1.20'
+description: Dynamic order-book-based economy plugin for Minecraft servers
+author: APPLEPIE6969
+website: https://modrinth.com/user/APPLEPIE6969
+
+# Dependencies - Vault is a soft dependency to allow auto-installation
+softdepend:
+  - Vault
+  - EconomyShopGUI
+  - ShopGUIPlus
+  - RedisBungee
+
+# Permissions
+permissions:
+  coinop.use:
+    description: Allows using the market
+    default: true
+  coinop.sell:
+    description: Allows selling items on the market
+    default: true
+  coinop.buy:
+    description: Allows buying items from the market
+    default: true
+  coinop.instant:
+    description: Allows instant buy/sell
+    default: true
+  coinop.orders:
+    description: Allows viewing and managing orders
+    default: true
+  coinop.cancel:
+    description: Allows canceling orders
+    default: true
+  coinop.admin:
+    description: Administrative access
+    default: op
+  coinop.admin.bounds:
+    description: Allows setting price bounds
+    default: op
+  coinop.admin.limits:
+    description: Allows setting trade limits
+    default: op
+  coinop.admin.reload:
+    description: Allows reloading configuration
+    default: op
+  coinop.admin.sync:
+    description: Allows managing sync settings
+    default: op
+  coinop.bypass.limit:
+    description: Bypasses daily trade limits
+    default: op
+  coinop.bypass.bounds:
+    description: Bypasses price bounds
+    default: op
+
+# Commands
+commands:
+  coinop:
+    description: Opens the market menu
+    usage: /coinop [buy|sell|orders|history]
+    permission: coinop.use
+    aliases: [co, market]
+  coinsell:
+    description: Sell items on the market
+    usage: /coinsell <commodity> <amount> <price>
+    permission: coinop.sell
+    aliases: [csell, cosell]
+  coinbuy:
+    description: Place a buy order on the market
+    usage: /coinbuy <commodity> <amount> <price>
+    permission: coinop.buy
+    aliases: [cbuy, cobuy]
+  coininstant:
+    description: Instant buy or sell at market price
+    usage: /coininstant <buy|sell> <commodity> <amount>
+    permission: coinop.instant
+    aliases: [cinstant, coinstant]
+  coinorders:
+    description: View and manage your orders
+    usage: /coinorders [cancel <orderId>]
+    permission: coinop.orders
+    aliases: [corders, coorders]
+  coinprice:
+    description: Check current market prices
+    usage: /coinprice <commodity>
+    permission: coinop.use
+    aliases: [cprice, coprice]
+  coinhistory:
+    description: View recent trade history
+    usage: /coinhistory <commodity>
+    permission: coinop.use
+    aliases: [chistory, cohistory]
+  coinadmin:
+    description: Administrative commands
+    usage: /coinadmin <reload|bounds|limits|sync>
+    permission: coinop.admin
+    aliases: [coa, ca, coadmin]

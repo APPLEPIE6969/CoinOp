@@ -1,0 +1,71 @@
+plugins {
+    id 'java'
+    id 'io.github.goooler.shadow'
+}
+
+group = 'com.coinop'
+version = '1.21.11-1.0.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+repositories {
+    maven { url = 'https://repo.papermc.io/repository/maven-public/' }
+    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url = 'https://jitpack.io' }
+    maven { url = 'https://s01.oss.sonatype.org/content/repositories/releases/' }
+    mavenCentral()
+}
+
+dependencies {
+    // Paper API 1.21 (compatible with all 1.21.x versions including 1.21.11)
+    compileOnly 'io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT'
+    compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
+
+    implementation 'redis.clients:jedis:5.1.0'
+    implementation 'com.zaxxer:HikariCP:5.1.0'
+    implementation 'com.mysql:mysql-connector-j:8.3.0'
+    implementation 'org.xerial:sqlite-jdbc:3.45.1.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = [
+                '../../src/main/java',
+                'src/main/java'
+            ]
+        }
+        resources {
+            srcDirs = ['../../src/main/resources']
+        }
+    }
+}
+
+processResources {
+    expand project.properties
+    filteringCharset = 'UTF-8'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}
+
+shadowJar {
+    archiveBaseName = 'coinop-plugin-1.21.11'
+    archiveVersion = '1.0.0-SNAPSHOT'
+
+    // Relocate dependencies to avoid conflicts
+    relocate 'redis.clients', 'com.coinop.lib.jedis'
+    relocate 'com.zaxxer.hikari', 'com.coinop.lib.hikari'
+    relocate 'com.mysql', 'com.coinop.lib.mysql'
+    relocate 'org.sqlite', 'com.coinop.lib.sqlite'
+    relocate 'com.google.gson', 'com.coinop.lib.gson'
+
+    // Minimize the JAR
+    minimize()
+}

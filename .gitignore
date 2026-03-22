@@ -1,0 +1,84 @@
+# Gradle build outputs
+.gradle/
+build/
+versions/*/build/
+bin/
+target/
+
+# Compiled class files (including test classes)
+*.class
+target/test-classes/
+
+# JAR files (use GitHub Releases for distribution)
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# Log files
+*.log
+hs_err_pid*.log
+replay_pid*.log
+
+# Package Files
+*.nar
+*.zip
+*.tar.gz
+*.rar
+
+# IDE - IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# IDE - Eclipse
+.project
+.classpath
+.settings/
+bin/
+
+# IDE - VS Code
+.vscode/
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Plugin runtime files
+plugins/CoinOp/
+logs/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Config backups
+*.yml.bak
+*.yaml.bak
+
+# Test server files
+test-server/
+server.jar
+spigot.jar
+paper.jar
+
+# Sensitive files
+secrets.yml
+private.yml
+*.pem
+*.key
