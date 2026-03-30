@@ -46,7 +46,7 @@ public class CoinOpManager implements CoinOpAPI {
         this.config = config;
         this.databaseManager = databaseManager;
         this.priceBounds = config.getPriceBounds();
-        this.matchingEngine = new MatchingEngine(economyManager, priceBounds);
+        this.matchingEngine = new MatchingEngine(economyManager, priceBounds, this::isValidCommodity);
         this.tradeListeners = new ArrayList<>();
         this.dailyTradeVolume = new ConcurrentHashMap<>();
         this.lastDailyReset = System.currentTimeMillis();
@@ -285,8 +285,23 @@ public class CoinOpManager implements CoinOpAPI {
         if (item == null || item.getType() == Material.AIR) {
             return false;
         }
+        return isValidCommodity(item.getType().name());
+    }
+
+    @Override
+    public boolean isValidCommodity(String commodityId) {
+        if (commodityId == null || commodityId.isEmpty()) {
+            return false;
+        }
+
+        try {
+            Material.valueOf(commodityId);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+
         return config.getAllowedCommodities().isEmpty()
-                || config.getAllowedCommodities().contains(item.getType().name());
+                || config.getAllowedCommodities().contains(commodityId);
     }
 
     @Override

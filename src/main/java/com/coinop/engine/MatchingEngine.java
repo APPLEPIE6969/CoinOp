@@ -9,6 +9,7 @@ import com.coinop.economy.EconomyManager;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Predicate;
 
 // Order matching engine - continuous double auction with price-time priority
 public class MatchingEngine {
@@ -16,21 +17,32 @@ public class MatchingEngine {
     private final Map<String, OrderBook> orderBooks;
     private final EconomyManager economyManager;
     private final PriceBounds priceBounds;
+    private final Predicate<String> commodityValidator;
     private final List<Trade> tradeHistory;
     private static final int MAX_TRADE_HISTORY = 10000;
     private final AtomicLong tradeIdGenerator;
     private final List<TradeListener> tradeListeners;
 
-    public MatchingEngine(EconomyManager economyManager, PriceBounds priceBounds) {
+    public MatchingEngine(EconomyManager economyManager, PriceBounds priceBounds, Predicate<String> commodityValidator) {
         this.orderBooks = new ConcurrentHashMap<>();
         this.economyManager = economyManager;
         this.priceBounds = priceBounds;
+        this.commodityValidator = commodityValidator;
         this.tradeHistory = Collections.synchronizedList(new ArrayList<>());
         this.tradeIdGenerator = new AtomicLong(System.currentTimeMillis());
         this.tradeListeners = new ArrayList<>();
     }
 
     public OrderBook getOrderBook(String commodityId) {
+        OrderBook book = orderBooks.get(commodityId);
+        if (book != null) {
+            return book;
+        }
+
+        if (commodityValidator != null && !commodityValidator.test(commodityId)) {
+            throw new IllegalArgumentException("Invalid commodity: " + commodityId);
+        }
+
         return orderBooks.computeIfAbsent(commodityId, OrderBook::new);
     }
 
