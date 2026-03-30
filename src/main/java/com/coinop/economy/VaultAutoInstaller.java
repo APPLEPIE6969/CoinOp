@@ -10,6 +10,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.logging.Level;
 
 // Auto-downloads Vault if missing - saves server admins some work
 public class VaultAutoInstaller {
@@ -126,7 +127,7 @@ public class VaultAutoInstaller {
             return true;
 
         } catch (Exception e) {
-            plugin.getLogger().warning("Download failed: " + e.getMessage());
+            plugin.getLogger().log(Level.WARNING, "Download failed", e);
             return false;
         }
     }

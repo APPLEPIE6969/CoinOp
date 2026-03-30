@@ -18,6 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 // Central manager - coordinates order matching, economy, sync, and limits
 public class CoinOpManager implements CoinOpAPI {
@@ -80,7 +81,7 @@ public class CoinOpManager implements CoinOpAPI {
             try {
                 listener.onTrade(trade);
             } catch (Exception e) {
-                plugin.getLogger().warning("Error in trade listener: " + e.getMessage());
+                plugin.getLogger().log(Level.WARNING, "Error in trade listener", e);
             }
         }
     }
