@@ -27,7 +27,7 @@ class MatchingEngineTest {
         priceBounds.setGlobalMinPrice(1.0);
         priceBounds.setGlobalMaxPrice(1000000.0);
 
-        engine = new MatchingEngine(null, priceBounds);
+        engine = new MatchingEngine(null, priceBounds, id -> true);
         buyer = UUID.randomUUID();
         seller = UUID.randomUUID();
     }
@@ -254,6 +254,26 @@ class MatchingEngineTest {
         assertTrue(result.isFullyFilled());
         // Average price: (5*100 + 5*110) / 10 = 105
         assertEquals(105.0, result.getAveragePrice());
+    }
+
+    @Test
+    @DisplayName("Invalid commodity ID throws exception and prevents map growth")
+    void testInvalidCommodityId() {
+        MatchingEngine secureEngine = new MatchingEngine(null, priceBounds, id -> id.equals("DIAMOND"));
+
+        // Valid ID should work
+        assertNotNull(secureEngine.getOrderBook("DIAMOND"));
+
+        // Invalid ID should throw IllegalArgumentException
+        assertThrows(IllegalArgumentException.class, () -> {
+            secureEngine.getOrderBook("INVALID_ITEM");
+        });
+
+        // Verify the map didn't grow with the invalid ID
+        Map<String, OrderBook> books = secureEngine.getAllOrderBooks();
+        assertEquals(1, books.size());
+        assertTrue(books.containsKey("DIAMOND"));
+        assertFalse(books.containsKey("INVALID_ITEM"));
     }
 
     @Test

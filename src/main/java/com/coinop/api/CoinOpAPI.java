@@ -49,6 +49,8 @@ public interface CoinOpAPI {
     // Commodity utilities
     boolean isValidCommodity(ItemStack item);
 
+    boolean isValidCommodity(String commodityId);
+
     String getCommodityId(ItemStack item);
 
     String getCommodityDisplayName(String commodityId);
