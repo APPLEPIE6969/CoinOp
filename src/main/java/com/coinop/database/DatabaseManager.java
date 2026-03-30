@@ -13,6 +13,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
 
 // Handles database persistence for orders and trades
 // Supports SQLite (embedded) and MySQL (remote)
@@ -93,7 +94,7 @@ public class DatabaseManager {
             return true;
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Database init failed: " + e.getMessage());
+            plugin.getLogger().log(Level.SEVERE, "Database init failed", e);
             return false;
         }
     }
@@ -168,7 +169,7 @@ public class DatabaseManager {
                 stmt.executeUpdate();
 
             } catch (SQLException e) {
-                plugin.getLogger().warning("Failed to save order: " + e.getMessage());
+                plugin.getLogger().log(Level.WARNING, "Failed to save order", e);
             }
         }, executor);
     }
@@ -194,7 +195,7 @@ public class DatabaseManager {
                 stmt.executeUpdate();
 
             } catch (SQLException e) {
-                plugin.getLogger().warning("Failed to save trade: " + e.getMessage());
+                plugin.getLogger().log(Level.WARNING, "Failed to save trade", e);
             }
         }, executor);
     }
@@ -224,7 +225,7 @@ public class DatabaseManager {
                 }
 
             } catch (SQLException e) {
-                plugin.getLogger().warning("Failed to load orders: " + e.getMessage());
+                plugin.getLogger().log(Level.WARNING, "Failed to load orders", e);
             }
 
             return orders;
@@ -246,7 +247,7 @@ public class DatabaseManager {
                 stmt.executeUpdate();
 
             } catch (SQLException e) {
-                plugin.getLogger().warning("Failed to update order: " + e.getMessage());
+                plugin.getLogger().log(Level.WARNING, "Failed to update order", e);
             }
         }, executor);
     }
@@ -278,7 +279,7 @@ public class DatabaseManager {
                 }
 
             } catch (SQLException e) {
-                plugin.getLogger().warning("Failed to get trade history: " + e.getMessage());
+                plugin.getLogger().log(Level.WARNING, "Failed to get trade history", e);
             }
 
             return trades;

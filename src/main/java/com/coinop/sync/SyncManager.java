@@ -19,6 +19,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 
 // Multi-server sync via Redis Pub/Sub - keeps order books in sync across servers
 public class SyncManager {
@@ -89,7 +90,7 @@ public class SyncManager {
             return true;
 
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to connect to Redis: " + e.getMessage());
+            plugin.getLogger().log(Level.SEVERE, "Failed to connect to Redis", e);
             return false;
         }
     }
@@ -106,7 +107,7 @@ public class SyncManager {
                     }, TRADE_CHANNEL, ORDER_CHANNEL, CANCEL_CHANNEL, SYNC_CHANNEL);
                 } catch (Exception e) {
                     if (enabled) {
-                        plugin.getLogger().warning("Redis connection lost, reconnecting in 5 seconds...");
+                        plugin.getLogger().log(Level.WARNING, "Redis connection lost, reconnecting in 5 seconds", e);
                         try {
                             Thread.sleep(5000);
                         } catch (InterruptedException ie) {
@@ -150,7 +151,7 @@ public class SyncManager {
                         break;
                 }
             } catch (Exception e) {
-                plugin.getLogger().warning("Error handling sync message: " + e.getMessage());
+                plugin.getLogger().log(Level.WARNING, "Error handling sync message", e);
             }
         });
     }
@@ -202,7 +203,7 @@ public class SyncManager {
             try (Jedis jedis = jedisPool.getResource()) {
                 jedis.publish(channel, message);
             } catch (Exception e) {
-                plugin.getLogger().warning("Failed to publish to Redis: " + e.getMessage());
+                plugin.getLogger().log(Level.WARNING, "Failed to publish to Redis", e);
             }
         });
     }
